@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 import os
 
 # Проверка наличия файла базы данных
-db_path = 'server_logs_600k.db'
+db_path = 'server_logs_250000rows.db'
 if not os.path.exists(db_path):
     raise FileNotFoundError(f"Database file not found at {db_path}")
 
