@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 
 # Подключение к базе данных SQLite
 conn = sqlite3.connect('server_logs_250000rows.db')
@@ -49,18 +49,27 @@ y_encoded = label_encoder.fit_transform(y)
 X_train, X_test, y_train, y_test = train_test_split(X_encoded, y_encoded, test_size=0.3, random_state=42)
 
 # Настройка гиперпараметров для RandomForestClassifier
-param_grid = {
+param_distributions = {
     'n_estimators': [100, 200, 300],
     'max_depth': [10, 20, 30, None],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4]
+    'min_samples_split': [2, 5],
+    'min_samples_leaf': [1, 2]
 }
 
-grid_search = GridSearchCV(estimator=RandomForestClassifier(random_state=42), param_grid=param_grid, cv=3, n_jobs=-1, scoring='accuracy')
-grid_search.fit(X_train, y_train)
+random_search = RandomizedSearchCV(
+    estimator=RandomForestClassifier(random_state=42),
+    param_distributions=param_distributions,
+    n_iter=20,  # Количество случайных комбинаций
+    cv=3,  # Кросс-валидация
+    n_jobs=-1,  # Использование всех доступных процессоров
+    random_state=42,
+    scoring='accuracy'
+)
+
+random_search.fit(X_train, y_train)
 
 # Использование лучшей модели
-best_model = grid_search.best_estimator_
+best_model = random_search.best_estimator_
 
 # Обучение лучшей модели
 best_model.fit(X_train, y_train)
