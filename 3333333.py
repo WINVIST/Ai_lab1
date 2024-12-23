@@ -90,9 +90,9 @@ mse_mean = mean_squared_error(y_test, y_pred_mean)
 rmse_mean = np.sqrt(mse_mean)
 
 # Построение рисунка
-plt.figure(figsize=(10, 12))
+plt.figure(figsize=(15, 10))
 
-# Оригинальный график
+# Оригинальный график (используем весь файл)
 plt.subplot(2, 1, 1)
 plt.plot(y_test, label="Истинные значения", color="black", linestyle="-", linewidth=2)
 plt.plot(y_pred_ridge, label="Ridge", color="blue", linestyle="--")
